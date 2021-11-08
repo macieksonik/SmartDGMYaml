@@ -1,0 +1,87 @@
+esphome:
+  name: dgm1
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: true
+
+wifi:
+  ssid: "ssid"
+  password: "password"
+  ap:
+    ssid: "DGM"
+    password: "password"
+
+captive_portal:
+
+logger:
+
+api:
+  password: "password"
+
+ota:
+  password: "password"
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    timezone: Europe/Warsaw
+    
+substitutions:
+  plug_name: DGM1
+
+web_server:
+  port: 80
+
+binary_sensor:
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO3
+      mode: INPUT_PULLUP
+      inverted: true
+    on_press:
+      - switch.toggle: relay
+
+sensor:
+  - platform: hlw8012
+    sel_pin:
+      number: GPIO12
+      inverted: true
+    cf_pin: 4
+    cf1_pin: 5
+    current:
+      name: "${plug_name} Current"
+    voltage:
+      name: "${plug_name} Voltage"
+    power:
+      name: "${plug_name} Power"
+    update_interval: 1s
+    voltage_divider: 800
+    current_resistor: 0.0023
+
+switch:
+  - platform: gpio
+    name: "${plug_name} Switch"
+    pin: GPIO14
+    id: relay
+    on_turn_on:
+      - light.turn_on: led
+    on_turn_off:
+      - light.turn_off: led
+
+light:
+  - platform: monochromatic
+    output: state_led
+    id: led
+    
+output:
+  - platform: esp8266_pwm
+    id: state_led
+    pin:
+      number: GPIO13
+      inverted: true
+
+text_sensor:
+  - platform: version
+    name: "${plug_name} - ESPHome Version"
+  
