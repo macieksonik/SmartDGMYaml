@@ -51,10 +51,16 @@ sensor:
     cf1_pin: 5
     current:
       name: "${plug_name} Current"
+      device_class: "current"
+      state_class: "measurement"
     voltage:
       name: "${plug_name} Voltage"
+      device_class: "voltage"
+      state_class: "measurement"
     power:
       name: "${plug_name} Power"
+      device_class: "power"
+      state_class: "measurement"
     update_interval: 1s
     voltage_divider: 800
     current_resistor: 0.0023
@@ -84,4 +90,7 @@ output:
 text_sensor:
   - platform: version
     name: "${plug_name} - ESPHome Version"
+    
+   
+
   
